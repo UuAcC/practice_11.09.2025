@@ -24,25 +24,31 @@ public:
 	~My_Own_Set();
 
 	My_Own_Set(const My_Own_Set& copied_one);
-
 	My_Own_Set& operator=(const My_Own_Set& copied_one);
 
 	uint16_t get_size() const;
 	void set_size(uint16_t ns);
+	bool is_there(uint16_t i) const;
 
 	void add(uint16_t i);
 	void del(uint16_t i);
-	bool is_there(uint16_t i) const;
+	My_Own_Set& operator+(uint16_t i);
+	My_Own_Set& operator-(uint16_t i);
 
 	My_Own_Set& associateWith(const My_Own_Set& what_associate_with);
 	My_Own_Set& intersectWith(const My_Own_Set& what_intersect_with);
 	My_Own_Set& negate();
+
+	My_Own_Set& operator|(const My_Own_Set& what_associate_with);
+	My_Own_Set& operator&(const My_Own_Set& what_intersect_with);
+	My_Own_Set& operator~();
 
 	static My_Own_Set association(const My_Own_Set& first, const My_Own_Set& second);
 	static My_Own_Set intersection(const My_Own_Set& first, const My_Own_Set& second);
 	static My_Own_Set negation(const My_Own_Set& what_to_negate);
 
 	void print_all();
+	friend ostream& operator<<(ostream& out, const My_Own_Set& set);
 };
 
 /*print_bit(uint16_t(~65536));*/

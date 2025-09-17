@@ -42,6 +42,18 @@ void My_Own_Set::set_size(uint16_t ns)
 
 void My_Own_Set::add(uint16_t i) { if (i < size) segments[i >> 5] |= (1 << (i & 31)); }
 void My_Own_Set::del(uint16_t i) { if (i < size) segments[i >> 5] &= ~(1 << (i & 31)); }
+
+My_Own_Set& My_Own_Set::operator+(uint16_t i)
+{
+	if (i < size) segments[i >> 5] |= (1 << (i & 31));
+	return *this;
+}
+My_Own_Set& My_Own_Set::operator-(uint16_t i)
+{
+	if (i < size) segments[i >> 5] &= ~(1 << (i & 31));
+	return *this;
+}
+
 bool My_Own_Set::is_there(uint16_t i) const
 {
 	if (i >= size) return false;
@@ -75,6 +87,22 @@ My_Own_Set& My_Own_Set::negate()
 	return *this;
 }
 
+My_Own_Set& My_Own_Set::operator|(const My_Own_Set& what_associate_with) 
+{ 
+	this->associateWith(what_associate_with); 
+	return *this;
+}
+My_Own_Set& My_Own_Set::operator&(const My_Own_Set& what_intersect_with) 
+{ 
+	this->intersectWith(what_intersect_with); 
+	return *this;
+}
+My_Own_Set& My_Own_Set::operator~() 
+{ 
+	this->negate(); 
+	return *this;
+}
+
 My_Own_Set My_Own_Set::association(const My_Own_Set& first, const My_Own_Set& second)
 {
 	if (first.size >= second.size)
@@ -104,4 +132,19 @@ void My_Own_Set::print_all()
 		}
 	if (this->is_there(s)) { cout << ", " << s; }
 	cout << "}" << endl;
+}
+
+ostream& operator<<(ostream& out, const My_Own_Set& set)
+{
+	uint16_t s = set.get_size() - 1; out << "{";
+	bool flag = false;
+	for (size_t i = 0; i < s; i++)
+		if (set.is_there(i))
+		{
+			if (flag) out << ", ";
+			out << i; flag = true;
+		}
+	if (set.is_there(s)) { out << ", " << s; }
+	out << "}" << endl;
+	return out;
 }
